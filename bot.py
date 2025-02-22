@@ -1,16 +1,12 @@
 import discord
 import asyncio
-import requests
 from discord.ext import commands
 from flask import Flask, render_template, request, jsonify
-from dotenv import load_dotenv
 import os
-
-# Load environment variables from .env file
-load_dotenv()
+import threading
 
 # Get the token from the environment variable
-TOKEN = os.getenv("token")
+TOKEN = os.getenv("DISCORD_TOKEN")
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
@@ -47,13 +43,9 @@ def send_message():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-
 def run_flask():
     app.run(host="0.0.0.0", port=5000)
 
-
-import threading
 threading.Thread(target=run_flask).start()
-
 
 bot.run(TOKEN)
