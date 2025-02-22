@@ -5,6 +5,10 @@ from flask import Flask, request, jsonify, render_template_string
 import os
 import threading
 import time
+import logging
+
+# Enable logging
+logging.basicConfig(level=logging.INFO)
 
 # Get the token from the environment variable
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -13,6 +17,7 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 intents = discord.Intents.default()
 intents.guilds = True
 intents.messages = True
+intents.members = True  # if you need member intents
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
