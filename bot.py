@@ -4,6 +4,7 @@ from discord.ext import commands
 from flask import Flask, request, jsonify, render_template_string
 import os
 import threading
+import time
 
 # Get the token from the environment variable
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -19,7 +20,6 @@ async def on_ready():
     print(f"Logged in as {bot.user}")
     global servers
     servers = {guild.id: guild.name for guild in bot.guilds}
-    app.run(host="0.0.0.0", port=5000)
 
 # Define the HTML content as a string
 html_content = """
@@ -190,4 +190,12 @@ def send_message():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-threading.Thread(target=bot.run, args=(TOKEN,)).start()
+def run_flask():
+    # Wait for the bot to be ready before starting the Flask server
+    while not servers:
+        time.sleep(1)
+    app.run(host="0.0.0.0", port=5000)
+
+threading.Thread(target=run_flask).start()
+
+bot.run(TOKEN)
