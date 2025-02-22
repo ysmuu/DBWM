@@ -9,7 +9,12 @@ import time
 # Get the token from the environment variable
 TOKEN = os.getenv("DISCORD_TOKEN")
 
-bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
+# Define intents
+intents = discord.Intents.default()
+intents.guilds = True
+intents.messages = True
+
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 app = Flask(__name__)
 
@@ -20,6 +25,7 @@ async def on_ready():
     print(f"Logged in as {bot.user}")
     global servers
     servers = {guild.id: guild.name for guild in bot.guilds}
+    print(f"Servers: {servers}")
 
 # Define the HTML content as a string
 html_content = """
