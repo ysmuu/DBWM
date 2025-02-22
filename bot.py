@@ -19,6 +19,7 @@ async def on_ready():
     print(f"Logged in as {bot.user}")
     global servers
     servers = {guild.id: guild.name for guild in bot.guilds}
+    app.run(host="0.0.0.0", port=5000)
 
 # Define the HTML content as a string
 html_content = """
@@ -189,9 +190,4 @@ def send_message():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-def run_flask():
-    app.run(host="0.0.0.0", port=5000)
-
-threading.Thread(target=run_flask).start()
-
-bot.run(TOKEN)
+threading.Thread(target=bot.run, args=(TOKEN,)).start()
